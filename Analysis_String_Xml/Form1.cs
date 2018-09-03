@@ -33,7 +33,7 @@ namespace Analysis_String_Xml
         {
             YandexTranslateSdk wrapper = new YandexTranslateSdk();
             wrapper.ApiKey = "trnsl.1.1.20180826T084827Z.54e49a82ea8c2f4d.3459b97eef4275c517282942408b6e377c9bee8b";
-            string xml_path = @"D:\Users\WIJTB\Desktop\test\strings.xml";
+            string xml_path = @"C:\Users\king0\Desktop\test\strings.xml";
             XmlDocument XmlDoc = new XmlDocument();
             XmlDoc.Load(xml_path);
             XmlNodeList NodeLists = XmlDoc.SelectNodes("resources/string");
@@ -44,7 +44,7 @@ namespace Analysis_String_Xml
                 Match m = regex.Match(StrAttrValue);
                 if (m.Success)
                 {
-
+                    Insert_Text(StrAttrValue);
                 }
                 else
                 {
