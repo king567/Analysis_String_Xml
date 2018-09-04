@@ -19,7 +19,9 @@ namespace Analysis_String_Xml
 {
     public partial class Form1 : Form
     {
-        public string English_Xml_Path = @"C:\Users\king0\Desktop\test\strings.xml";
+        string English_Xml_Path = "";
+        string Chinese_Xml_Path = "";
+        string Api_Key = "";
         public class SearchResult
         {
             public string text { get; set; }
@@ -62,7 +64,7 @@ namespace Analysis_String_Xml
         public async void Translate_Xml()
         {
             YandexTranslateSdk wrapper = new YandexTranslateSdk();
-            wrapper.ApiKey = "trnsl.1.1.20180826T084827Z.54e49a82ea8c2f4d.3459b97eef4275c517282942408b6e377c9bee8b";
+            wrapper.ApiKey = Api_Key;
             XmlDocument XmlDoc = new XmlDocument();
             XmlDoc.Load(English_Xml_Path);
             XmlNodeList NodeLists = XmlDoc.SelectNodes("resources/string");
@@ -93,23 +95,68 @@ namespace Analysis_String_Xml
 
         private void Save_To_Xml_Click(object sender, EventArgs e)
         {
-            string path = @"C:\Users\king0\Desktop\test\strings_chinese.xml";
+            
             // This text is added only once to the file.
-            if (!File.Exists(path))
+            if (!File.Exists(Chinese_Xml_Path))
             {
                 // Create a file to write to.
-                using (StreamWriter sw = File.CreateText(path))
+                using (StreamWriter sw = File.CreateText(Chinese_Xml_Path))
                 {
                     sw.WriteLine(textBox1.Text);
                 }
             }
             else
             {
-                using (StreamWriter writer = new StreamWriter(path, false))
+                using (StreamWriter writer = new StreamWriter(Chinese_Xml_Path, false))
                 {
-                        writer.WriteLine(textBox1.Text);
+                    writer.WriteLine(textBox1.Text);
                 }
             }
+        }
+
+        private void File_Path_Box_TextChanged(object sender, EventArgs e)
+        {
+            English_Xml_Path = File_Path_Box.Text;
+        }
+
+        private void Save_Path_Box_TextChanged(object sender, EventArgs e)
+        {
+            Chinese_Xml_Path = Save_Path_Box.Text;
+        }
+
+        private void Select_File_Path_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog file = new OpenFileDialog
+            {
+                Filter = "strings|*.xml"
+            };
+            file.ShowDialog();
+            if (file.FileName.ToString() == "")
+            { }
+            else
+            {
+                File_Path_Box.Text = file.FileName.ToString();
+            }
+        }
+
+        private void Select_Save_Path_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog file = new OpenFileDialog
+            {
+                Filter = "strings_chinese|*.xml"
+            };
+            file.ShowDialog();
+            if (file.FileName.ToString() == "")
+            { }
+            else
+            {
+                Save_Path_Box.Text = file.FileName.ToString();
+            }
+        }
+
+        private void Api_Key_Box_TextChanged(object sender, EventArgs e)
+        {
+            Api_Key = Api_Key_Box.Text;
         }
     }
 }
