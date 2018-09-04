@@ -30,15 +30,16 @@
         {
             this.Get_Content_Bt = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.Save_To_Xml = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // Get_Content_Bt
             // 
-            this.Get_Content_Bt.Location = new System.Drawing.Point(240, 12);
+            this.Get_Content_Bt.Location = new System.Drawing.Point(126, 12);
             this.Get_Content_Bt.Name = "Get_Content_Bt";
-            this.Get_Content_Bt.Size = new System.Drawing.Size(187, 61);
+            this.Get_Content_Bt.Size = new System.Drawing.Size(197, 60);
             this.Get_Content_Bt.TabIndex = 0;
-            this.Get_Content_Bt.Text = "取出內容";
+            this.Get_Content_Bt.Text = "開始翻譯String.xml";
             this.Get_Content_Bt.UseVisualStyleBackColor = true;
             this.Get_Content_Bt.Click += new System.EventHandler(this.Get_Content_Bt_ClickAsync);
             // 
@@ -50,11 +51,22 @@
             this.textBox1.Size = new System.Drawing.Size(469, 327);
             this.textBox1.TabIndex = 1;
             // 
+            // Save_To_Xml
+            // 
+            this.Save_To_Xml.Location = new System.Drawing.Point(412, 12);
+            this.Save_To_Xml.Name = "Save_To_Xml";
+            this.Save_To_Xml.Size = new System.Drawing.Size(183, 60);
+            this.Save_To_Xml.TabIndex = 2;
+            this.Save_To_Xml.Text = "儲存檔案";
+            this.Save_To_Xml.UseVisualStyleBackColor = true;
+            this.Save_To_Xml.Click += new System.EventHandler(this.Save_To_Xml_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(753, 428);
+            this.Controls.Add(this.Save_To_Xml);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.Get_Content_Bt);
             this.Name = "Form1";
@@ -68,6 +80,7 @@
 
         private System.Windows.Forms.Button Get_Content_Bt;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button Save_To_Xml;
     }
 }
 
