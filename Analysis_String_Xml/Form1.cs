@@ -76,14 +76,25 @@ namespace Analysis_String_Xml
                 string English_Xml_Name = OneNode.Attributes["name"].Value;
                 Regex Find_String_Variable = new Regex(@"(\$|%)[0-9A-Za-z]");
                 Match m = Find_String_Variable.Match(English_Xml_Value);
-                if (m.Success)
-                {
-                    Insert_Text("<string" + @" " + "name" + @" " + "=" + @"""" + English_Xml_Name + @"""" + ">" + English_Xml_Value + @"</string>");
+                try
+                { 
+                    if (m.Success)
+                    {
+                        Insert_Text("<string" + @" " + "name" + @" " + "=" + @"""" + English_Xml_Name + @"""" + ">" + English_Xml_Value + @"</string>");
+                    }
+                    else if (English_Xml_Value == null)
+                    {
+                        Insert_Text("<string" + @" " + "name" + @" " + "=" + @"""" + English_Xml_Name + @"""" + ">" + English_Xml_Value + @"</string>");
+                    }
+                    else
+                    {
+                        string TranslatedText = await wrapper.TranslateText(English_Xml_Value, "zh");
+                        Insert_Text("<string" + @" " + "name" + @" " + "=" + @"""" + English_Xml_Name + @"""" + ">" + Taiwan_transle_api(TranslatedText) + @"</string>");
+                    }
                 }
-                else
+                catch
                 {
-                    string TranslatedText = await wrapper.TranslateText(English_Xml_Value, "zh");
-                    Insert_Text("<string" + @" " + "name" + @" " + "=" + @"""" + English_Xml_Name + @"""" + ">" + Taiwan_transle_api(TranslatedText) + @"</string>");
+                        Insert_Text("<string" + @" " + "name" + @" " + "=" + @"""" + English_Xml_Name + @"""" + ">" + English_Xml_Value + @"</string>");
                 }
             }
             Insert_Text("</resources>");
