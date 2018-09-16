@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Net;
+using System.Runtime.InteropServices;
 
 namespace Analysis_String_Xml
 {
@@ -22,54 +23,43 @@ namespace Analysis_String_Xml
         string English_Xml_Path = "";
         string Chinese_Xml_Path = "";
         string Api_Key = "";
+        Method method = new Method();
         public class SearchResult
         {
             public string text { get; set; }
         }
+        //region 無邊框拖動效果
+        [DllImport("user32.dll")]//拖動無窗體的控件
+        public static extern bool ReleaseCapture();
+        [DllImport("user32.dll")]
+        public static extern bool SendMessage(IntPtr hwnd, int wMsg, int wParam, int lParam);
+        public const int WM_SYSCOMMAND = 0x0112;
+        public const int SC_MOVE = 0xF010;
+        public const int HTCAPTION = 0x0002;
+
+        public void Start_MouseDown(object sender, MouseEventArgs e)
+        {
+            //拖動窗體
+            ReleaseCapture();
+            SendMessage(this.Handle, WM_SYSCOMMAND, SC_MOVE + HTCAPTION, 0);
+        }
+        //endregion
         public Form1()
         {
             InitializeComponent();
         }
-        public void Insert_Text(string content)
-        {
-            int count = textBox1.Text.Length;
-            string get_box_text = textBox1.Text;
-            textBox1.Text = get_box_text.Insert(count, content + "\r\n");
-            //////自動卷軸到最底下
-            textBox1.ScrollBars = ScrollBars.Vertical;
-            textBox1.SelectionStart = textBox1.Text.Length;
-            textBox1.ScrollToCaret();
-        }
-        public string Taiwan_transle_api(string Context)
-        {
-            string Api_Url = @"https://api.zhconvert.org/convert?";
-            string Converter_Parameter = @"converter=" + "Taiwan";
-            string Json_Format = @"&prettify=" + "1";
-            string Translate_Text = @"&text=" + Context;
-            string Full_Url = Api_Url + Converter_Parameter + Json_Format + Translate_Text;
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Full_Url);
-            request.Timeout = 10000;
-            request.Method = "GET";
-            request.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; Windows NT 5.2; Windows NT 6.0; Windows NT 6.1; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727; MS-RTC LM 8; .NET CLR 3.0.04506.648; .NET CLR 3.5.21022; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET CLR 4.0C; .NET CLR 4.0E)";
-            HttpWebResponse webresponse = (HttpWebResponse)request.GetResponse();
-            StreamReader streamReader = new StreamReader(webresponse.GetResponseStream(), Encoding.UTF8);
-            string retString = streamReader.ReadToEnd();
-            webresponse.Close();
-            streamReader.Close();
 
-            JObject Search_Json = JObject.Parse(retString);
-            string Chinese_Text = (string)Search_Json["data"]["text"];
-            return Chinese_Text;
-        }
         public async void Translate_Xml()
         {
-            YandexTranslateSdk wrapper = new YandexTranslateSdk();
-            wrapper.ApiKey = Api_Key;
+            YandexTranslateSdk wrapper = new YandexTranslateSdk
+            {
+                ApiKey = Api_Key
+            };
             XmlDocument XmlDoc = new XmlDocument();
             XmlDoc.Load(English_Xml_Path);
             XmlNodeList NodeLists = XmlDoc.SelectNodes("resources/string");
-            Insert_Text("<?xml" + @" " + @"version=" + @"""" + "1.0" + @"""" + @" " + "encoding =" + @"""" + "utf-8" + @"""" + "?>");
-            Insert_Text("<resources>");
+            method.Insert_Text(textBox1,"<?xml" + @" " + @"version=" + @"""" + "1.0" + @"""" + @" " + "encoding =" + @"""" + "utf-8" + @"""" + "?>");
+            method.Insert_Text(textBox1, "<resources>");
             foreach (XmlNode OneNode in NodeLists)
             {
                 string English_Xml_Value = OneNode.InnerText;
@@ -80,24 +70,24 @@ namespace Analysis_String_Xml
                 { 
                     if (m.Success)
                     {
-                        Insert_Text("<string" + @" " + "name" + @" " + "=" + @"""" + English_Xml_Name + @"""" + ">" + English_Xml_Value + @"</string>");
+                        method.Insert_Text(textBox1, "<string" + @" " + "name" + @" " + "=" + @"""" + English_Xml_Name + @"""" + ">" + English_Xml_Value + @"</string>");
                     }
                     else if (English_Xml_Value == null)
                     {
-                        Insert_Text("<string" + @" " + "name" + @" " + "=" + @"""" + English_Xml_Name + @"""" + ">" + English_Xml_Value + @"</string>");
+                        method.Insert_Text(textBox1, "<string" + @" " + "name" + @" " + "=" + @"""" + English_Xml_Name + @"""" + ">" + English_Xml_Value + @"</string>");
                     }
                     else
                     {
                         string TranslatedText = await wrapper.TranslateText(English_Xml_Value, "zh");
-                        Insert_Text("<string" + @" " + "name" + @" " + "=" + @"""" + English_Xml_Name + @"""" + ">" + Taiwan_transle_api(TranslatedText) + @"</string>");
+                        method.Insert_Text(textBox1, "<string" + @" " + "name" + @" " + "=" + @"""" + English_Xml_Name + @"""" + ">" + method.Taiwan_transle_api(TranslatedText) + @"</string>");
                     }
                 }
                 catch
                 {
-                        Insert_Text("<string" + @" " + "name" + @" " + "=" + @"""" + English_Xml_Name + @"""" + ">" + English_Xml_Value + @"</string>");
+                    method.Insert_Text(textBox1, "<string" + @" " + "name" + @" " + "=" + @"""" + English_Xml_Name + @"""" + ">" + English_Xml_Value + @"</string>");
                 }
             }
-            Insert_Text("</resources>");
+            method.Insert_Text(textBox1, "</resources>");
         }
         private void Get_Content_Bt_ClickAsync(object sender, EventArgs e)
         {

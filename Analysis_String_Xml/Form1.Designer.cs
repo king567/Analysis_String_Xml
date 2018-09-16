@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.Get_Content_Bt = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.Save_To_Xml = new System.Windows.Forms.Button();
@@ -156,6 +157,7 @@
             this.Controls.Add(this.Save_To_Xml);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.Get_Content_Bt);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "Strings.xml繁化工具";
             this.ResumeLayout(false);
