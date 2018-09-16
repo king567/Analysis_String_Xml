@@ -70,21 +70,21 @@ namespace Analysis_String_Xml
                 { 
                     if (m.Success)
                     {
-                        method.Insert_Text(textBox1, "<string" + @" " + "name" + @" " + "=" + @"""" + English_Xml_Name + @"""" + ">" + English_Xml_Value + @"</string>");
+                        method.Insert_Text(textBox1, method.Full_Context(English_Xml_Name, English_Xml_Value) );
                     }
                     else if (English_Xml_Value == null)
                     {
-                        method.Insert_Text(textBox1, "<string" + @" " + "name" + @" " + "=" + @"""" + English_Xml_Name + @"""" + ">" + English_Xml_Value + @"</string>");
+                        method.Insert_Text(textBox1, method.Full_Context(English_Xml_Name, English_Xml_Value) );
                     }
                     else
                     {
                         string TranslatedText = await wrapper.TranslateText(English_Xml_Value, "zh");
-                        method.Insert_Text(textBox1, "<string" + @" " + "name" + @" " + "=" + @"""" + English_Xml_Name + @"""" + ">" + method.Taiwan_transle_api(TranslatedText) + @"</string>");
+                        method.Insert_Text(textBox1, method.Full_Context(English_Xml_Name, method.Taiwan_transle_api(TranslatedText) ) );
                     }
                 }
                 catch
                 {
-                    method.Insert_Text(textBox1, "<string" + @" " + "name" + @" " + "=" + @"""" + English_Xml_Name + @"""" + ">" + English_Xml_Value + @"</string>");
+                    method.Insert_Text(textBox1, method.Full_Context(English_Xml_Name, English_Xml_Value));
                 }
             }
             method.Insert_Text(textBox1, "</resources>");
@@ -104,6 +104,7 @@ namespace Analysis_String_Xml
                 using (StreamWriter sw = File.CreateText(Chinese_Xml_Path))
                 {
                     sw.WriteLine(textBox1.Text);
+                    MessageBox.Show("儲存成功");
                 }
             }
             else
@@ -111,6 +112,7 @@ namespace Analysis_String_Xml
                 using (StreamWriter writer = new StreamWriter(Chinese_Xml_Path, false))
                 {
                     writer.WriteLine(textBox1.Text);
+                    MessageBox.Show("儲存成功");
                 }
             }
         }
@@ -127,32 +129,12 @@ namespace Analysis_String_Xml
 
         private void Select_File_Path_Click(object sender, EventArgs e)
         {
-            OpenFileDialog file = new OpenFileDialog
-            {
-                Filter = "strings|*.xml"
-            };
-            file.ShowDialog();
-            if (file.FileName.ToString() == "")
-            { }
-            else
-            {
-                File_Path_Box.Text = file.FileName.ToString();
-            }
+            method.Choose_Dialog(File_Path_Box, "strings|*.xml");
         }
 
         private void Select_Save_Path_Click(object sender, EventArgs e)
         {
-            OpenFileDialog file = new OpenFileDialog
-            {
-                Filter = "strings_chinese|*.xml"
-            };
-            file.ShowDialog();
-            if (file.FileName.ToString() == "")
-            { }
-            else
-            {
-                Save_Path_Box.Text = file.FileName.ToString();
-            }
+            method.Choose_Dialog(Save_Path_Box, "strings_chinese|*.xml");
         }
 
         private void Api_Key_Box_TextChanged(object sender, EventArgs e)

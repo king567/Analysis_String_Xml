@@ -42,5 +42,24 @@ namespace Analysis_String_Xml
             string Chinese_Text = (string)Search_Json["data"]["text"];
             return Chinese_Text;
         }
+        public string Full_Context(string Name, string Value)
+        {
+            string Context = "<string" + @" " + "name" + @" " + "=" + @"""" + Name + @"""" + ">" + Value + @"</string>";
+            return Context;
+        }
+        public void Choose_Dialog(TextBox textBox,string filter_value)
+        {
+            OpenFileDialog file = new OpenFileDialog
+            {
+                Filter = filter_value
+            };
+            file.ShowDialog();
+            if (file.FileName.ToString() == "")
+            { }
+            else
+            {
+                textBox.Text = file.FileName.ToString();
+            }
+        }
     }
 }

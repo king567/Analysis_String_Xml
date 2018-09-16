@@ -98,7 +98,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="translation.ico" />
-    <Content Include="translation_1.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
